@@ -1,0 +1,17 @@
+﻿package com.ecommerce.dto;
+
+import lombok.Data;
+
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
+/**
+ * 购物车数量更新请求。
+ */
+@Data
+public class CartUpdateRequest {
+
+    @NotNull(message = "数量不能为空")
+    @Min(value = 0, message = "数量不能为负数")
+    private Integer quantity;
+}

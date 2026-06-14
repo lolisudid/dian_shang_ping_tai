@@ -1,0 +1,14 @@
+# MySQL 数据源配置（切换：spring.profiles.active=mysql）
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/ecommerce?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+    username: root
+    password: root
+    druid:
+      initial-size: 2
+      max-active: 20
+    initialization-mode: always
+    schema: classpath:schema-mysql.sql
+    sql-script-encoding: UTF-8

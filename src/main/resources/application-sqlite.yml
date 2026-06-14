@@ -1,0 +1,14 @@
+# SQLite 数据源配置（开发默认）
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: org.sqlite.JDBC
+    url: jdbc:sqlite:./data/ecommerce.db
+    username:
+    password:
+    druid:
+      initial-size: 1
+      max-active: 5
+    initialization-mode: always
+    schema: classpath:schema.sql
+    sql-script-encoding: UTF-8
