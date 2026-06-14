@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import request from '../api/request'
 
-/** Pinia：购物车条数（列表仍从接口拉取） */
+/** Pinia锛氳喘鐗╄溅鏉℃暟锛堝垪琛ㄤ粛浠庢帴鍙ｆ媺鍙栵級 */
 export const useCartStore = defineStore('cart', () => {
   const count = ref(0)
 

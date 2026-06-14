@@ -1,4 +1,4 @@
-﻿package com.ecommerce.util;
+package com.ecommerce.util;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -12,17 +12,17 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * JWT 工具：生成与解析 Token（jjwt 0.12 API）。
- */
 @Component
 public class JwtUtils {
 
-    @Value("${jwt.secret}")
-    private String secret;
+    private final String secret;
+    private final int expireHours;
 
-    @Value("${jwt.expire-hours}")
-    private int expireHours;
+    public JwtUtils(@Value("${jwt.secret}") String secret,
+                    @Value("${jwt.expire-hours}") int expireHours) {
+        this.secret = secret;
+        this.expireHours = expireHours;
+    }
 
     private SecretKey getKey() {
         return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));

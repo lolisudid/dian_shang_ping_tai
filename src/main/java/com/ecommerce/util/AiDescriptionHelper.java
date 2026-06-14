@@ -3,14 +3,14 @@ package com.ecommerce.util;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-/**
- * AI 商品描述假实现：根据名称与分类生成模板文案，后续可替换为 OpenAI API。
- */
 @Component
 public class AiDescriptionHelper {
 
-    @Value("${ai.description.enabled:true}")
-    private boolean enabled;
+    private final boolean enabled;
+
+    public AiDescriptionHelper(@Value("${ai.description.enabled:true}") boolean enabled) {
+        this.enabled = enabled;
+    }
 
     public String generate(String name, String category) {
         if (!enabled) {

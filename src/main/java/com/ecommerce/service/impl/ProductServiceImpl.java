@@ -1,6 +1,7 @@
-﻿package com.ecommerce.service.impl;
+package com.ecommerce.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ecommerce.dto.AiDescriptionRequest;
 import com.ecommerce.dto.ProductSaveRequest;
@@ -13,9 +14,6 @@ import com.ecommerce.util.UserContext;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-/**
- * 商品服务实现。
- */
 @Service
 public class ProductServiceImpl implements ProductService {
 
@@ -54,8 +52,8 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product getById(Long id) {
         Product p = productMapper.selectById(id);
-        if (p == null || (p.getDeleted() != null && p.getDeleted() == 1)) {
-            throw new BusinessException("商品不存在或已下架");
+        if (p == null || Integer.valueOf(1).equals(p.getDeleted())) {
+            throw new BusinessException("product not found or removed");
         }
         return p;
     }
@@ -64,6 +62,7 @@ public class ProductServiceImpl implements ProductService {
     public Product create(ProductSaveRequest request) {
         requireAdmin();
         Product product = toEntity(request);
+        product.setDeleted(0);
         if (product.getDescription() == null || product.getDescription().isEmpty()) {
             product.setDescription(aiDescriptionHelper.generate(product.getName(), product.getCategory()));
         }
@@ -75,7 +74,7 @@ public class ProductServiceImpl implements ProductService {
     public Product update(ProductSaveRequest request) {
         requireAdmin();
         if (request.getId() == null) {
-            throw new BusinessException("商品ID不能为空");
+            throw new BusinessException("product id required");
         }
         getById(request.getId());
         Product product = toEntity(request);
@@ -89,13 +88,15 @@ public class ProductServiceImpl implements ProductService {
         requireAdmin();
         Product p = productMapper.selectById(id);
         if (p == null) {
-            throw new BusinessException("商品不存在");
+            throw new BusinessException("product not found");
         }
         if (physical) {
             productMapper.deleteById(id);
         } else {
-            p.setDeleted(1);
-            productMapper.updateById(p);
+            productMapper.update(null,
+                    new LambdaUpdateWrapper<Product>()
+                            .eq(Product::getId, id)
+                            .set(Product::getDeleted, 1));
         }
     }
 
@@ -107,7 +108,7 @@ public class ProductServiceImpl implements ProductService {
 
     private void requireAdmin() {
         if (!UserContext.isAdmin()) {
-            throw new BusinessException(403, "需要管理员权限");
+            throw new BusinessException(403, "admin required");
         }
     }
 

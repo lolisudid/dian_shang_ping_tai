@@ -1,17 +1,18 @@
-﻿package com.ecommerce.config;
+package com.ecommerce.config;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.ecommerce.entity.User;
 import com.ecommerce.mapper.UserMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
-/**
- * 启动时初始化默认管理员账号：admin / admin123
- */
 @Component
 public class DataInitializer implements CommandLineRunner {
+
+    private static final Logger log = LoggerFactory.getLogger(DataInitializer.class);
 
     private final UserMapper userMapper;
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
@@ -30,7 +31,7 @@ public class DataInitializer implements CommandLineRunner {
             admin.setPassword(encoder.encode("admin123"));
             admin.setRole("admin");
             userMapper.insert(admin);
-            System.out.println("[Init] 默认管理员已创建: admin / admin123");
+            log.info("默认管理员已创建: admin / admin123");
         }
     }
 }

@@ -1,6 +1,7 @@
-﻿package com.ecommerce.service.impl;
+package com.ecommerce.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ecommerce.entity.CartItem;
 import com.ecommerce.entity.OrderItem;
@@ -22,9 +23,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-/**
- * 订单服务实现 — 基于 MyBatis Plus。
- */
 @Service
 public class OrderServiceImpl implements OrderService {
 
@@ -143,7 +141,9 @@ public class OrderServiceImpl implements OrderService {
         if (order == null) {
             throw new BusinessException("订单不存在");
         }
-        order.setStatus(status);
-        shopOrderMapper.updateById(order);
+        shopOrderMapper.update(null,
+                new LambdaUpdateWrapper<ShopOrder>()
+                        .eq(ShopOrder::getId, id)
+                        .set(ShopOrder::getStatus, status));
     }
 }

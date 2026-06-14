@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div>
     <nav class="navbar navbar-default">
       <div class="container-fluid">

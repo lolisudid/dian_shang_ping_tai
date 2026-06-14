@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div>
     <div class="jumbotron">
       <h1>电商购物平台</h1>

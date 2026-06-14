@@ -1,4 +1,4 @@
-﻿package com.ecommerce;
+package com.ecommerce;
 
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;

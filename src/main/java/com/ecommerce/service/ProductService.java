@@ -1,6 +1,6 @@
 package com.ecommerce.service;
 
-import com.ecommerce.common.PageResult;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ecommerce.dto.AiDescriptionRequest;
 import com.ecommerce.dto.ProductSaveRequest;
 import com.ecommerce.entity.Product;
@@ -9,8 +9,8 @@ import java.math.BigDecimal;
 
 public interface ProductService {
 
-    PageResult<Product> query(String name, String category, BigDecimal minPrice, BigDecimal maxPrice,
-                              int page, int size, boolean adminView);
+    Page<Product> query(String name, String category, BigDecimal minPrice, BigDecimal maxPrice,
+                        int page, int size, boolean adminView);
 
     Product getById(Long id);
 

@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div>
     <h3>商品管理</h3>
     <form class="well" @submit.prevent="save">

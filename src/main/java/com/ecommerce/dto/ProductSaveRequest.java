@@ -13,17 +13,17 @@ public class ProductSaveRequest {
 
     private Long id;
 
-    @NotBlank(message = "ÉÌÆ·Ãû³Æ²»ÄÜÎª¿Õ")
+    @NotBlank(message = "å•†å“åç§°ä¸èƒ½ä¸ºç©º")
     private String name;
 
     private String category;
 
-    @NotNull(message = "¼Û¸ñ²»ÄÜÎª¿Õ")
-    @DecimalMin(value = "0.01", message = "¼Û¸ñ±ØĞë´óÓÚ0")
+    @NotNull(message = "ä»·æ ¼ä¸èƒ½ä¸ºç©º")
+    @DecimalMin(value = "0.01", message = "ä»·æ ¼å¿…é¡»å¤§äº 0")
     private BigDecimal price;
 
-    @NotNull(message = "¿â´æ²»ÄÜÎª¿Õ")
-    @Min(value = 0, message = "¿â´æ²»ÄÜÎª¸ºÊı")
+    @NotNull(message = "åº“å­˜ä¸èƒ½ä¸ºç©º")
+    @Min(value = 0, message = "åº“å­˜ä¸èƒ½ä¸ºè´Ÿæ•°")
     private Integer stock;
 
     private String imageUrl;

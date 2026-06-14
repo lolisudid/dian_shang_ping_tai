@@ -1,4 +1,4 @@
-﻿import axios from 'axios'
+import axios from 'axios'
 import { useUserStore } from '../stores/user'
 import router from '../router'
 
@@ -10,7 +10,7 @@ const request = axios.create({
 request.interceptors.request.use(config => {
   const user = useUserStore()
   if (user.token) {
-    config.headers.Authorization = Bearer 
+    config.headers.Authorization = `Bearer ${user.token}`
   }
   return config
 })

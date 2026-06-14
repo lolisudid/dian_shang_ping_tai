@@ -1,4 +1,4 @@
-﻿package com.ecommerce.mapper;
+package com.ecommerce.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.ecommerce.entity.OrderItem;

@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="col-md-4 col-md-offset-4">
     <h3>注册</h3>
     <div v-if="errorMsg" class="alert alert-danger">{{ errorMsg }}</div>

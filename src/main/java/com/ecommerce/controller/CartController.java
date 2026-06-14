@@ -1,4 +1,4 @@
-﻿package com.ecommerce.controller;
+package com.ecommerce.controller;
 
 import com.ecommerce.common.Result;
 import com.ecommerce.dto.CartRequest;
@@ -10,9 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/**
- * 购物车接口。
- */
 @RestController
 @RequestMapping("/api/cart")
 public class CartController {
@@ -44,5 +41,11 @@ public class CartController {
     public Result<Void> remove(@PathVariable Long id) {
         cartService.remove(id);
         return Result.ok(null);
+    }
+
+    @DeleteMapping("/clear")
+    public Result<Void> clear() {
+        cartService.clear();
+        return Result.ok("购物车已清空", null);
     }
 }

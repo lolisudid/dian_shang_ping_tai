@@ -1,22 +1,22 @@
-﻿package com.ecommerce.exception;
+package com.ecommerce.exception;
 
 import com.ecommerce.common.Result;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-/**
- * 全局异常捕获：统一转换为 Result JSON。
- */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(BusinessException.class)
     public Result<Void> handleBusiness(BusinessException e) {
         return Result.fail(e.getCode(), e.getMessage());
     }
 
-    /** @Valid 参数校验失败 */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public Result<Void> handleValid(MethodArgumentNotValidException e) {
         String msg = "参数校验失败";
@@ -28,7 +28,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public Result<Void> handleOther(Exception e) {
-        e.printStackTrace();
+        log.error("服务器内部错误", e);
         return Result.fail(500, "服务器内部错误");
     }
 }

@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="col-md-4 col-md-offset-4">
     <h3>登录</h3>
     <div v-if="route.query.expired" class="alert alert-warning">登录已过期，请重新登录</div>

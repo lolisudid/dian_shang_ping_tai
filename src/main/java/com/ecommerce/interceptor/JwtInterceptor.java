@@ -1,4 +1,4 @@
-﻿package com.ecommerce.interceptor;
+package com.ecommerce.interceptor;
 
 import com.ecommerce.common.Result;
 import com.ecommerce.util.JwtUtils;
@@ -9,10 +9,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-/**
- * JWT 认证拦截器：从 Authorization 头提取 Bearer Token 并验证。
- * 替代 Shiro，更轻量且完全无状态。
- */
 public class JwtInterceptor implements HandlerInterceptor {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
@@ -32,6 +28,17 @@ public class JwtInterceptor implements HandlerInterceptor {
         if (token != null && token.startsWith("Bearer ")) {
             token = token.substring(7);
         }
+
+        if (token == null || token.isEmpty()) {
+            if ("GET".equalsIgnoreCase(request.getMethod())) {
+                return true;
+            }
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.setContentType("application/json;charset=UTF-8");
+            MAPPER.writeValue(response.getWriter(), Result.fail(401, "请先登录"));
+            return false;
+        }
+
         try {
             Claims claims = jwtUtils.parse(token);
             request.setAttribute("userId", Long.valueOf(claims.get("userId").toString()));

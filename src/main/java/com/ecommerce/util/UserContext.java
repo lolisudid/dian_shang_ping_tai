@@ -1,4 +1,4 @@
-﻿package com.ecommerce.util;
+package com.ecommerce.util;
 
 import com.ecommerce.exception.BusinessException;
 import jakarta.servlet.http.HttpServletRequest;

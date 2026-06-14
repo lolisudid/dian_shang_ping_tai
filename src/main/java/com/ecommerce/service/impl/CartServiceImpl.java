@@ -1,6 +1,7 @@
-﻿package com.ecommerce.service.impl;
+package com.ecommerce.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.ecommerce.dto.CartRequest;
 import com.ecommerce.entity.CartItem;
 import com.ecommerce.entity.Product;
@@ -13,9 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-/**
- * 购物车服务实现。
- */
 @Service
 public class CartServiceImpl implements CartService {
 
@@ -37,7 +35,7 @@ public class CartServiceImpl implements CartService {
     public void add(CartRequest request) {
         Long userId = UserContext.currentUserId();
         Product product = productMapper.selectById(request.getProductId());
-        if (product == null || product.getDeleted() == 1) {
+        if (product == null || Integer.valueOf(1).equals(product.getDeleted())) {
             throw new BusinessException("商品不存在");
         }
         if (product.getStock() < request.getQuantity()) {
@@ -51,8 +49,10 @@ public class CartServiceImpl implements CartService {
             if (newQty > product.getStock()) {
                 throw new BusinessException("库存不足");
             }
-            exist.setQuantity(newQty);
-            cartItemMapper.updateById(exist);
+            cartItemMapper.update(null,
+                    new LambdaUpdateWrapper<CartItem>()
+                            .eq(CartItem::getId, exist.getId())
+                            .set(CartItem::getQuantity, newQty));
         } else {
             CartItem item = new CartItem();
             item.setUserId(userId);
@@ -76,12 +76,20 @@ public class CartServiceImpl implements CartService {
         if (product.getStock() < quantity) {
             throw new BusinessException("库存不足");
         }
-        target.setQuantity(quantity);
-        cartItemMapper.updateById(target);
+        cartItemMapper.update(null,
+                new LambdaUpdateWrapper<CartItem>()
+                        .eq(CartItem::getId, cartItemId)
+                        .set(CartItem::getQuantity, quantity));
     }
 
     @Override
     public void remove(Long cartItemId) {
         cartItemMapper.deleteById(cartItemId);
+    }
+
+    @Override
+    public void clear() {
+        cartItemMapper.delete(new LambdaQueryWrapper<CartItem>()
+                .eq(CartItem::getUserId, UserContext.currentUserId()));
     }
 }

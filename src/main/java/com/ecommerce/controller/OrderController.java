@@ -1,4 +1,4 @@
-﻿package com.ecommerce.controller;
+package com.ecommerce.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ecommerce.common.Result;

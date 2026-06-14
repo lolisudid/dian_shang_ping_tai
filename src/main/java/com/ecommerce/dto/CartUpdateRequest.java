@@ -5,13 +5,10 @@ import lombok.Data;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
-/**
- * ¹ºÎï³µÊıÁ¿¸üĞÂÇëÇó¡£
- */
 @Data
 public class CartUpdateRequest {
 
-    @NotNull(message = "ÊıÁ¿²»ÄÜÎª¿Õ")
-    @Min(value = 0, message = "ÊıÁ¿²»ÄÜÎª¸ºÊı")
+    @NotNull(message = "æ•°é‡ä¸èƒ½ä¸ºç©º")
+    @Min(value = 0, message = "æ•°é‡ä¸èƒ½ä¸ºè´Ÿæ•°")
     private Integer quantity;
 }

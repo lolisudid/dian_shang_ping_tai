@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 
-/** Pinia：登录 token 与用户信息 */
+/** Pinia锛氱櫥褰?token 涓庣敤鎴蜂俊鎭?*/
 export const useUserStore = defineStore('user', () => {
   const token = ref(localStorage.getItem('token') || '')
   const userId = ref(localStorage.getItem('userId') || '')
