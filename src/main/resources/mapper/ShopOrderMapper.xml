@@ -13,12 +13,19 @@
     <select id="listByUserId" resultType="com.ecommerce.entity.ShopOrder">
         SELECT id, user_id AS userId, total_amount AS totalAmount, status,
                create_time AS createTime, update_time AS updateTime
-        FROM shop_order WHERE user_id = #{userId} ORDER BY id DESC
+        FROM shop_order WHERE user_id = #{userId}
+        <if test="status != null and status != ''">
+            AND status = #{status}
+        </if>
+        ORDER BY id DESC
         LIMIT #{limit} OFFSET #{offset}
     </select>
 
     <select id="countByUserId" resultType="long">
         SELECT COUNT(1) FROM shop_order WHERE user_id = #{userId}
+        <if test="status != null and status != ''">
+            AND status = #{status}
+        </if>
     </select>
 
     <select id="listAll" resultType="com.ecommerce.entity.ShopOrder">

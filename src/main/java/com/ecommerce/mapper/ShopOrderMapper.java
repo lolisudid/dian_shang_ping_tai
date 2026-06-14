@@ -6,19 +6,17 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
-/**
- * 订单 Mapper：支持用户分页查询、管理员分页查询。
- */
 @Mapper
 public interface ShopOrderMapper {
 
     ShopOrder findById(@Param("id") Long id);
 
     List<ShopOrder> listByUserId(@Param("userId") Long userId,
+                                 @Param("status") String status,
                                  @Param("offset") int offset,
                                  @Param("limit") int limit);
 
-    long countByUserId(@Param("userId") Long userId);
+    long countByUserId(@Param("userId") Long userId, @Param("status") String status);
 
     List<ShopOrder> listAll(@Param("offset") int offset, @Param("limit") int limit);
 

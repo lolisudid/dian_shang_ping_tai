@@ -9,9 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-/**
- * 订单接口：用户提交/查询，管理员管理。
- */
 @RestController
 @RequestMapping("/api/orders")
 public class OrderController {
@@ -34,8 +31,9 @@ public class OrderController {
     @GetMapping("/my")
     public Result<PageResult<ShopOrder>> myOrders(
             @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        return Result.ok(orderService.myOrders(page, size));
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String status) {
+        return Result.ok(orderService.myOrders(page, size, status));
     }
 
     @GetMapping("/{id}")

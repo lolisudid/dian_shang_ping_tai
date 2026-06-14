@@ -1,4 +1,4 @@
-package com.ecommerce.service.impl;
+﻿package com.ecommerce.service.impl;
 
 import com.ecommerce.dto.LoginRequest;
 import com.ecommerce.dto.RegisterRequest;
@@ -7,6 +7,8 @@ import com.ecommerce.exception.BusinessException;
 import com.ecommerce.mapper.UserMapper;
 import com.ecommerce.service.AuthService;
 import com.ecommerce.util.JwtUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,6 +18,8 @@ import java.util.Map;
 
 @Service
 public class AuthServiceImpl implements AuthService {
+
+    private static final Logger log = LoggerFactory.getLogger(AuthServiceImpl.class);
 
     @Autowired
     private UserMapper userMapper;
@@ -34,15 +38,18 @@ public class AuthServiceImpl implements AuthService {
         user.setPassword(encoder.encode(request.getPassword()));
         user.setRole("user");
         userMapper.insert(user);
+        log.info("新用户注册: {}", request.getUsername());
     }
 
     @Override
     public Map<String, Object> login(LoginRequest request) {
         User user = userMapper.findByUsername(request.getUsername());
         if (user == null || !encoder.matches(request.getPassword(), user.getPassword())) {
+            log.warn("登录失败: {}", request.getUsername());
             throw new BusinessException(401, "用户名或密码错误");
         }
         String token = jwtUtils.createToken(user.getId(), user.getUsername(), user.getRole());
+        log.info("用户登录成功: {} (role={})", user.getUsername(), user.getRole());
         Map<String, Object> data = new HashMap<>();
         data.put("token", token);
         data.put("userId", user.getId());

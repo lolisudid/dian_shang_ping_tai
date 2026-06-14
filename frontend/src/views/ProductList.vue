@@ -1,29 +1,29 @@
-ï»¿<template>
+<template>
   <div>
-    <h3>å•†å“åˆ—è¡¨</h3>
+    <h3>ÉÌÆ·ÁÐ±í</h3>
     <form class="form-inline" @submit.prevent="search">
-      <input v-model="query.name" class="form-control" placeholder="åç§°" />
-      <input v-model="query.category" class="form-control" placeholder="åˆ†ç±»" />
-      <button class="btn btn-default" type="submit">æœç´¢</button>
+      <input v-model="query.name" class="form-control" placeholder="Ãû³Æ" />
+      <input v-model="query.category" class="form-control" placeholder="·ÖÀà" />
+      <button class="btn btn-default" type="submit">ËÑË÷</button>
     </form>
-    <p v-if="loading">åŠ è½½ä¸­...</p>
+    <p v-if="loading">¼ÓÔØÖÐ...</p>
     <p v-if="error" class="text-danger">{{ error }}</p>
     <table class="table table-striped" style="margin-top:15px">
-      <thead><tr><th>åç§°</th><th>åˆ†ç±»</th><th>ä»·æ ¼</th><th>åº“å­˜</th><th></th></tr></thead>
+      <thead><tr><th>Ãû³Æ</th><th>·ÖÀà</th><th>¼Û¸ñ</th><th>¿â´æ</th><th></th></tr></thead>
       <tbody>
         <tr v-for="p in list" :key="p.id">
           <td>{{ p.name }}</td>
           <td>{{ p.category }}</td>
-          <td>æ¥¼{{ p.price }}</td>
+          <td>£¤{{ p.price }}</td>
           <td>{{ p.stock }}</td>
-          <td><router-link :to="`/products/${p.id}`">è¯¦æƒ…</router-link></td>
+          <td><router-link :to="`/products/${p.id}`">ÏêÇé</router-link></td>
         </tr>
       </tbody>
     </table>
     <div v-if="total > size" class="text-center">
-      <button class="btn btn-default" :disabled="page <= 1" @click="page--; load()">ä¸Šä¸€é¡µ</button>
-      <span>ç¬¬ {{ page }} / {{ Math.ceil(total / size) }} é¡µï¼ˆå…± {{ total }} æ¡ï¼‰</span>
-      <button class="btn btn-default" :disabled="page >= Math.ceil(total / size)" @click="page++; load()">ä¸‹ä¸€é¡µ</button>
+      <button class="btn btn-default" :disabled="page <= 1" @click="page--; load()">ÉÏÒ»Ò³</button>
+      <span>µÚ {{ page }} / {{ Math.ceil(total / size) }} Ò³£¨¹² {{ total }} Ìõ£©</span>
+      <button class="btn btn-default" :disabled="page >= Math.ceil(total / size)" @click="page++; load()">ÏÂÒ»Ò³</button>
     </div>
   </div>
 </template>

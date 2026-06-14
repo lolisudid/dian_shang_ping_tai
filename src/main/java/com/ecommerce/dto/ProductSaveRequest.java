@@ -1,4 +1,4 @@
-package com.ecommerce.dto;
+﻿package com.ecommerce.dto;
 
 import lombok.Data;
 
@@ -19,7 +19,7 @@ public class ProductSaveRequest {
     private String category;
 
     @NotNull(message = "价格不能为空")
-    @DecimalMin(value = "0.01", message = "价格必须大于 0")
+    @DecimalMin(value = "0.01", message = "价格必须大于0")
     private BigDecimal price;
 
     @NotNull(message = "库存不能为空")

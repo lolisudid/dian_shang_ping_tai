@@ -1,23 +1,23 @@
-ï»¿<template>
+<template>
   <div>
-    <p v-if="loading">åŠ è½½ä¸­...</p>
+    <p v-if="loading">¼ÓÔØÖĞ...</p>
     <p v-if="error" class="text-danger">{{ error }}</p>
     <div v-if="product">
       <h3>{{ product.name }}</h3>
-      <p class="text-muted">{{ product.category }} Â· æ¥¼{{ product.price }} Â· åº“å­˜ {{ product.stock }}</p>
+      <p class="text-muted">{{ product.category }} ¡¤ £¤{{ product.price }} ¡¤ ¿â´æ {{ product.stock }}</p>
       <img v-if="product.imageUrl" :src="product.imageUrl" class="img-thumbnail" style="max-height:200px" />
       <p>{{ product.description }}</p>
       <div class="form-inline" v-if="product.stock > 0">
         <input v-model.number="qty" type="number" min="1" :max="product.stock" class="form-control" style="width:80px" />
-        <button class="btn btn-primary" @click="addCart">åŠ å…¥è´­ç‰©è½¦</button>
+        <button class="btn btn-primary" @click="addCart">¼ÓÈë¹ºÎï³µ</button>
       </div>
-      <p v-else class="text-warning">è¯¥å•†å“æš‚æ—¶ç¼ºè´§</p>
+      <p v-else class="text-warning">¸ÃÉÌÆ·ÔİÊ±È±»õ</p>
       <hr />
-      <h4>ç”¨æˆ·è¯„ä»·</h4>
+      <h4>ÓÃ»§ÆÀ¼Û</h4>
       <ul v-if="reviews.length">
-        <li v-for="r in reviews" :key="r.id">{{ r.username }}ï¼š{{ r.rating }}æ˜Ÿ - {{ r.content || 'æ— è¯„è®º' }}</li>
+        <li v-for="r in reviews" :key="r.id">{{ r.username }}£º{{ r.rating }}ĞÇ - {{ r.content || 'ÎŞÆÀÂÛ' }}</li>
       </ul>
-      <p v-else class="text-muted">æš‚æ— è¯„ä»·</p>
+      <p v-else class="text-muted">ÔİÎŞÆÀ¼Û</p>
     </div>
   </div>
 </template>
@@ -60,9 +60,9 @@ async function addCart() {
   try {
     await request.post('/api/cart', { productId: product.value.id, quantity: qty.value })
     await cart.refreshCount()
-    alert('å·²åŠ å…¥è´­ç‰©è½¦')
+    alert('ÒÑ¼ÓÈë¹ºÎï³µ')
   } catch (e) {
-    alert('åŠ å…¥å¤±è´¥ï¼š' + e.message)
+    alert('¼ÓÈëÊ§°Ü£º' + e.message)
   }
 }
 </script>

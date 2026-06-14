@@ -25,6 +25,14 @@
     <div class="container">
       <router-view />
     </div>
+
+    <!-- 全局 Toast 通知 -->
+    <div class="toast-container">
+      <div v-for="toast in toasts" :key="toast.id" class="toast-item" :class="'toast-' + toast.type"
+           @click="remove(toast.id)">
+        {{ toast.message }}
+      </div>
+    </div>
   </div>
 </template>
 
@@ -33,10 +41,12 @@ import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from './stores/user'
 import { useCartStore } from './stores/cart'
+import { useToast } from './composables/toast'
 
 const user = useUserStore()
 const cart = useCartStore()
 const router = useRouter()
+const { toasts, remove } = useToast()
 
 function logout() {
   user.logout()
@@ -46,3 +56,33 @@ function logout() {
 
 onMounted(() => cart.refreshCount())
 </script>
+
+<style>
+.toast-container {
+  position: fixed;
+  top: 60px;
+  right: 20px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 360px;
+}
+.toast-item {
+  padding: 12px 20px;
+  border-radius: 6px;
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  animation: toast-in 0.3s ease;
+}
+.toast-success { background: #5cb85c; }
+.toast-error { background: #d9534f; }
+.toast-warning { background: #f0ad4e; }
+.toast-info { background: #5bc0de; }
+@keyframes toast-in {
+  from { opacity: 0; transform: translateX(30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+</style>

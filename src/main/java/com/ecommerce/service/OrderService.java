@@ -3,14 +3,11 @@
 import com.ecommerce.common.PageResult;
 import com.ecommerce.entity.ShopOrder;
 
-/**
- * 订单服务接口。
- */
 public interface OrderService {
 
     ShopOrder submitFromCart();
 
-    PageResult<ShopOrder> myOrders(int page, int size);
+    PageResult<ShopOrder> myOrders(int page, int size, String status);
 
     ShopOrder detail(Long id);
 

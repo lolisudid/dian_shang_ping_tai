@@ -22,9 +22,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-/**
- * 订单服务实现：下单扣库存（事务）、用户分页查询、管理员分页查询、状态更新。
- */
 @Service
 public class OrderServiceImpl implements OrderService {
 
@@ -52,7 +49,7 @@ public class OrderServiceImpl implements OrderService {
         List<OrderItem> items = new ArrayList<>();
         for (CartItem c : cart) {
             if (c.getProductStock() < c.getQuantity()) {
-                throw new BusinessException("商品【" + c.getProductName() + "】库存不足");
+                throw new BusinessException("商品[" + c.getProductName() + "]库存不足");
             }
             int updated = productMapper.decreaseStock(c.getProductId(), c.getQuantity());
             if (updated == 0) {
@@ -81,11 +78,17 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public PageResult<ShopOrder> myOrders(int page, int size) {
+    public PageResult<ShopOrder> myOrders(int page, int size, String status) {
         Long userId = UserContext.currentUserId();
+        if (status != null && status.trim().isEmpty()) {
+            status = null;
+        }
+        if (status != null && !ALLOWED_STATUS.contains(status)) {
+            throw new BusinessException("无效的订单状态筛选条件");
+        }
         int offset = (page - 1) * size;
-        long total = shopOrderMapper.countByUserId(userId);
-        List<ShopOrder> records = shopOrderMapper.listByUserId(userId, offset, size);
+        long total = shopOrderMapper.countByUserId(userId, status);
+        List<ShopOrder> records = shopOrderMapper.listByUserId(userId, status, offset, size);
         for (ShopOrder o : records) {
             o.setItems(orderItemMapper.listByOrderId(o.getId()));
         }

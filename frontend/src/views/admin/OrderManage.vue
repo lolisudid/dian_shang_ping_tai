@@ -1,15 +1,15 @@
-ï»¿<template>
+<template>
   <div>
-    <h3>è®¢å•ç®¡ç†</h3>
-    <p v-if="loading">åŠ è½½ä¸­...</p>
+    <h3>¶©µ¥¹ÜÀí</h3>
+    <p v-if="loading">¼ÓÔØÖĞ...</p>
     <p v-if="error" class="text-danger">{{ error }}</p>
     <table class="table table-striped">
-      <thead><tr><th>ID</th><th>ç”¨æˆ·</th><th>é‡‘é¢</th><th>çŠ¶æ€</th><th>æ“ä½œ</th></tr></thead>
+      <thead><tr><th>ID</th><th>ÓÃ»§</th><th>½ğ¶î</th><th>×´Ì¬</th><th>²Ù×÷</th></tr></thead>
       <tbody>
         <tr v-for="o in list" :key="o.id">
           <td>{{ o.id }}</td>
           <td>{{ o.username }}</td>
-          <td>æ¥¼{{ o.totalAmount }}</td>
+          <td>£¤{{ o.totalAmount }}</td>
           <td>{{ o.status }}</td>
           <td>
             <select v-model="o._newStatus" class="form-control input-sm">
@@ -18,15 +18,15 @@
               <option value="COMPLETED">COMPLETED</option>
               <option value="CANCELLED">CANCELLED</option>
             </select>
-            <button class="btn btn-xs btn-primary" @click="update(o)">æ›´æ–°</button>
+            <button class="btn btn-xs btn-primary" @click="update(o)">¸üĞÂ</button>
           </td>
         </tr>
       </tbody>
     </table>
     <div v-if="total > size" class="text-center">
-      <button class="btn btn-default" :disabled="page <= 1" @click="page--; load()">ä¸Šä¸€é¡µ</button>
-      <span>ç¬¬ {{ page }} / {{ Math.ceil(total / size) }} é¡µ</span>
-      <button class="btn btn-default" :disabled="page >= Math.ceil(total / size)" @click="page++; load()">ä¸‹ä¸€é¡µ</button>
+      <button class="btn btn-default" :disabled="page <= 1" @click="page--; load()">ÉÏÒ»Ò³</button>
+      <span>µÚ {{ page }} / {{ Math.ceil(total / size) }} Ò³</span>
+      <button class="btn btn-default" :disabled="page >= Math.ceil(total / size)" @click="page++; load()">ÏÂÒ»Ò³</button>
     </div>
   </div>
 </template>
@@ -61,7 +61,7 @@ async function update(o) {
     await request.put(`/api/orders/${o.id}/status`, { status: o._newStatus })
     await load()
   } catch (e) {
-    alert('çŠ¶æ€æ›´æ–°å¤±è´¥ï¼š' + e.message)
+    alert('×´Ì¬¸üĞÂÊ§°Ü£º' + e.message)
   }
 }
 
