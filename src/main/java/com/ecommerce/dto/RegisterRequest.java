@@ -1,18 +1,18 @@
-ï»¿package com.ecommerce.dto;
+package com.ecommerce.dto;
 
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 @Data
 public class RegisterRequest {
 
-    @NotBlank(message = "ç”¨æˆ·åä¸èƒ½ä¸ºç©º")
-    @Size(min = 3, max = 32, message = "ç”¨æˆ·åé•¿åº¦3-32ä½")
+    @NotBlank(message = "ÓÃ»§Ãû²»ÄÜÎª¿Õ")
+    @Size(min = 3, max = 32, message = "ÓÃ»§Ãû³¤¶È3-32Î»")
     private String username;
 
-    @NotBlank(message = "å¯†ç ä¸èƒ½ä¸ºç©º")
-    @Size(min = 6, max = 32, message = "å¯†ç é•¿åº¦6-32ä½")
+    @NotBlank(message = "ÃÜÂë²»ÄÜÎª¿Õ")
+    @Size(min = 6, max = 32, message = "ÃÜÂë³¤¶È6-32Î»")
     private String password;
 }

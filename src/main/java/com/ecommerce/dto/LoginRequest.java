@@ -1,15 +1,15 @@
-ï»¿package com.ecommerce.dto;
+package com.ecommerce.dto;
 
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 @Data
 public class LoginRequest {
 
-    @NotBlank(message = "ç”¨æˆ·åä¸èƒ½ä¸ºç©º")
+    @NotBlank(message = "ÓÃ»§Ãû²»ÄÜÎª¿Õ")
     private String username;
 
-    @NotBlank(message = "å¯†ç ä¸èƒ½ä¸ºç©º")
+    @NotBlank(message = "ÃÜÂë²»ÄÜÎª¿Õ")
     private String password;
 }

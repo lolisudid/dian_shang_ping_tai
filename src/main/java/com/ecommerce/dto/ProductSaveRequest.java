@@ -1,11 +1,11 @@
-ï»¿package com.ecommerce.dto;
+package com.ecommerce.dto;
 
 import lombok.Data;
 
-import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 @Data
@@ -13,17 +13,17 @@ public class ProductSaveRequest {
 
     private Long id;
 
-    @NotBlank(message = "å•†å“åç§°ä¸èƒ½ä¸ºç©º")
+    @NotBlank(message = "ÉÌÆ·Ãû³Æ²»ÄÜÎª¿Õ")
     private String name;
 
     private String category;
 
-    @NotNull(message = "ä»·æ ¼ä¸èƒ½ä¸ºç©º")
-    @DecimalMin(value = "0.01", message = "ä»·æ ¼å¿…é¡»å¤§äº0")
+    @NotNull(message = "¼Û¸ñ²»ÄÜÎª¿Õ")
+    @DecimalMin(value = "0.01", message = "¼Û¸ñ±ØĞë´óÓÚ0")
     private BigDecimal price;
 
-    @NotNull(message = "åº“å­˜ä¸èƒ½ä¸ºç©º")
-    @Min(value = 0, message = "åº“å­˜ä¸èƒ½ä¸ºè´Ÿæ•°")
+    @NotNull(message = "¿â´æ²»ÄÜÎª¿Õ")
+    @Min(value = 0, message = "¿â´æ²»ÄÜÎª¸ºÊı")
     private Integer stock;
 
     private String imageUrl;

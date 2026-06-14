@@ -1,24 +1,29 @@
-package com.ecommerce.controller;
+﻿package com.ecommerce.controller;
 
 import com.ecommerce.common.Result;
 import com.ecommerce.dto.ReviewRequest;
 import com.ecommerce.entity.ProductReview;
 import com.ecommerce.service.ReviewService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * 评价接口。
+ */
 @RestController
 @RequestMapping("/api/reviews")
 public class ReviewController {
 
-    @Autowired
-    private ReviewService reviewService;
+    private final ReviewService reviewService;
+
+    public ReviewController(ReviewService reviewService) {
+        this.reviewService = reviewService;
+    }
 
     @PostMapping
-    public Result<Void> add(@Validated @RequestBody ReviewRequest request) {
+    public Result<Void> add(@Valid @RequestBody ReviewRequest request) {
         reviewService.addReview(request);
         return Result.ok("评价成功", null);
     }

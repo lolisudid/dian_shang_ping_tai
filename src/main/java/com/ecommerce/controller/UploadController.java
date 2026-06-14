@@ -1,4 +1,4 @@
-package com.ecommerce.controller;
+﻿package com.ecommerce.controller;
 
 import com.ecommerce.common.Result;
 import com.ecommerce.exception.BusinessException;
@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * 商品图片上传（扩展功能），返回可访问 URL。
+ * 商品图片上传（管理员）。
  */
 @RestController
 @RequestMapping("/api/upload")

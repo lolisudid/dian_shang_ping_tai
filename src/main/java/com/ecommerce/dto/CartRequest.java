@@ -2,8 +2,8 @@ package com.ecommerce.dto;
 
 import lombok.Data;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 
 @Data
 public class CartRequest {
@@ -12,6 +12,6 @@ public class CartRequest {
     private Long productId;
 
     @NotNull(message = "数量不能为空")
-    @Min(value = 1, message = "数量至少为 1")
+    @Min(value = 1, message = "数量至少�?1")
     private Integer quantity;
 }

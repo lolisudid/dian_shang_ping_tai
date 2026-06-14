@@ -1,40 +1,19 @@
-package com.ecommerce.mapper;
+﻿package com.ecommerce.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.ecommerce.entity.Product;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Update;
 
-import java.math.BigDecimal;
-import java.util.List;
-
+/**
+ * 商品 Mapper：BaseMapper 提供内置 CRUD，自定义 SQL 处理库存扣减等。
+ */
 @Mapper
-public interface ProductMapper {
+public interface ProductMapper extends BaseMapper<Product> {
 
-    Product findById(@Param("id") Long id);
-
-    List<Product> queryPage(@Param("name") String name,
-                            @Param("category") String category,
-                            @Param("minPrice") BigDecimal minPrice,
-                            @Param("maxPrice") BigDecimal maxPrice,
-                            @Param("includeDeleted") boolean includeDeleted,
-                            @Param("offset") int offset,
-                            @Param("limit") int limit);
-
-    long countQuery(@Param("name") String name,
-                    @Param("category") String category,
-                    @Param("minPrice") BigDecimal minPrice,
-                    @Param("maxPrice") BigDecimal maxPrice,
-                    @Param("includeDeleted") boolean includeDeleted);
-
-    int insert(Product product);
-
-    int update(Product product);
-
-    int logicalDelete(@Param("id") Long id);
-
-    int physicalDelete(@Param("id") Long id);
-
+    /** 扣减库存（带行锁条件，防止超卖） */
+    @Update("UPDATE product SET stock = stock - #{quantity}, update_time = datetime('now','localtime') " +
+            "WHERE id = #{id} AND stock >= #{quantity} AND deleted = 0")
     int decreaseStock(@Param("id") Long id, @Param("quantity") int quantity);
-
-    int countUnfinishedOrdersByProduct(@Param("productId") Long productId);
 }

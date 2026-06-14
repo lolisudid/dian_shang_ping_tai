@@ -1,17 +1,17 @@
-ï»¿package com.ecommerce.dto;
+package com.ecommerce.dto;
 
 import lombok.Data;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 
 /**
- * è´­ç‰©è½¦æ•°é‡æ›´æ–°è¯·æ±‚ã€‚
+ * ¹ºÎï³µÊıÁ¿¸üĞÂÇëÇó¡£
  */
 @Data
 public class CartUpdateRequest {
 
-    @NotNull(message = "æ•°é‡ä¸èƒ½ä¸ºç©º")
-    @Min(value = 0, message = "æ•°é‡ä¸èƒ½ä¸ºè´Ÿæ•°")
+    @NotNull(message = "ÊıÁ¿²»ÄÜÎª¿Õ")
+    @Min(value = 0, message = "ÊıÁ¿²»ÄÜÎª¸ºÊı")
     private Integer quantity;
 }

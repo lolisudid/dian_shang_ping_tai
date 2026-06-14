@@ -1,58 +1,39 @@
 ﻿package com.ecommerce.util;
 
 import com.ecommerce.exception.BusinessException;
-import com.ecommerce.shiro.UserPrincipal;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 /**
- * 从 Shiro Subject 获取当前登录用户信息。
- * 完全无状态：所有信息来自 JWT 解析后的 UserPrincipal，不依赖 Session。
+ * 从当前请求中获取登录用户信息（由 JwtInterceptor 注入）。
  */
 public final class UserContext {
 
-    private UserContext() {
+    private UserContext() {}
+
+    private static HttpServletRequest currentRequest() {
+        ServletRequestAttributes attrs = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        if (attrs == null) {
+            throw new BusinessException(500, "无法获取请求上下文");
+        }
+        return attrs.getRequest();
     }
 
-    private static Subject subject() {
-        return SecurityUtils.getSubject();
-    }
-
-    /**
-     * 获取当前登录用户 ID，未登录时抛出 BusinessException(401)。
-     */
     public static Long currentUserId() {
-        UserPrincipal principal = getPrincipal();
-        if (principal == null) {
+        Object id = currentRequest().getAttribute("userId");
+        if (id == null) {
             throw new BusinessException(401, "未登录");
         }
-        return principal.getUserId();
+        return (Long) id;
     }
 
-    /**
-     * 获取当前用户角色，未登录时返回 "guest"。
-     */
     public static String currentRole() {
-        UserPrincipal principal = getPrincipal();
-        return principal != null ? principal.getRole() : "guest";
+        Object role = currentRequest().getAttribute("role");
+        return role != null ? role.toString() : "guest";
     }
 
-    /**
-     * 判断当前用户是否为管理员。
-     */
     public static boolean isAdmin() {
-        String role = currentRole();
-        return "admin".equalsIgnoreCase(role);
-    }
-
-    private static UserPrincipal getPrincipal() {
-        if (!subject().isAuthenticated()) {
-            return null;
-        }
-        Object principal = subject().getPrincipal();
-        if (principal instanceof UserPrincipal) {
-            return (UserPrincipal) principal;
-        }
-        return null;
+        return "admin".equalsIgnoreCase(currentRole());
     }
 }

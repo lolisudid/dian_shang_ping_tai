@@ -1,45 +1,58 @@
-package com.ecommerce.service.impl;
+﻿package com.ecommerce.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.ecommerce.dto.CartRequest;
 import com.ecommerce.entity.CartItem;
 import com.ecommerce.entity.Product;
 import com.ecommerce.exception.BusinessException;
 import com.ecommerce.mapper.CartItemMapper;
+import com.ecommerce.mapper.ProductMapper;
 import com.ecommerce.service.CartService;
-import com.ecommerce.service.ProductService;
 import com.ecommerce.util.UserContext;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * 购物车服务实现。
+ */
 @Service
 public class CartServiceImpl implements CartService {
 
-    @Autowired
-    private CartItemMapper cartItemMapper;
-    @Autowired
-    private ProductService productService;
+    private final CartItemMapper cartItemMapper;
+    private final ProductMapper productMapper;
+
+    public CartServiceImpl(CartItemMapper cartItemMapper, ProductMapper productMapper) {
+        this.cartItemMapper = cartItemMapper;
+        this.productMapper = productMapper;
+    }
 
     @Override
     public List<CartItem> listMyCart() {
-        return cartItemMapper.listByUserId(UserContext.currentUserId());
+        return cartItemMapper.selectList(
+                new LambdaQueryWrapper<CartItem>().eq(CartItem::getUserId, UserContext.currentUserId()));
     }
 
     @Override
     public void add(CartRequest request) {
         Long userId = UserContext.currentUserId();
-        Product product = productService.getById(request.getProductId());
+        Product product = productMapper.selectById(request.getProductId());
+        if (product == null || product.getDeleted() == 1) {
+            throw new BusinessException("商品不存在");
+        }
         if (product.getStock() < request.getQuantity()) {
             throw new BusinessException("库存不足");
         }
-        CartItem exist = cartItemMapper.findByUserAndProduct(userId, request.getProductId());
+        CartItem exist = cartItemMapper.selectOne(new LambdaQueryWrapper<CartItem>()
+                .eq(CartItem::getUserId, userId)
+                .eq(CartItem::getProductId, request.getProductId()));
         if (exist != null) {
             int newQty = exist.getQuantity() + request.getQuantity();
             if (newQty > product.getStock()) {
                 throw new BusinessException("库存不足");
             }
-            cartItemMapper.updateQuantity(exist.getId(), newQty);
+            exist.setQuantity(newQty);
+            cartItemMapper.updateById(exist);
         } else {
             CartItem item = new CartItem();
             item.setUserId(userId);
@@ -51,18 +64,20 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void updateQuantity(Long cartItemId, Integer quantity) {
-        Long userId = UserContext.currentUserId();
-        List<CartItem> items = cartItemMapper.listByUserId(userId);
-        CartItem target = items.stream().filter(i -> i.getId().equals(cartItemId)).findFirst()
-                .orElseThrow(() -> new BusinessException("购物车项不存在"));
+        CartItem target = cartItemMapper.selectById(cartItemId);
+        if (target == null || !target.getUserId().equals(UserContext.currentUserId())) {
+            throw new BusinessException("购物车项不存在");
+        }
         if (quantity <= 0) {
             cartItemMapper.deleteById(cartItemId);
             return;
         }
-        if (target.getProductStock() < quantity) {
+        Product product = productMapper.selectById(target.getProductId());
+        if (product.getStock() < quantity) {
             throw new BusinessException("库存不足");
         }
-        cartItemMapper.updateQuantity(cartItemId, quantity);
+        target.setQuantity(quantity);
+        cartItemMapper.updateById(target);
     }
 
     @Override

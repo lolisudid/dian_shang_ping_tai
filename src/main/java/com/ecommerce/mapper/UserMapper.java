@@ -1,15 +1,8 @@
-package com.ecommerce.mapper;
+﻿package com.ecommerce.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.ecommerce.entity.User;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 
 @Mapper
-public interface UserMapper {
-
-    User findByUsername(@Param("username") String username);
-
-    User findById(@Param("id") Long id);
-
-    int insert(User user);
-}
+public interface UserMapper extends BaseMapper<User> {}

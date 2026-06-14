@@ -1,29 +1,31 @@
-package com.ecommerce.controller;
+﻿package com.ecommerce.controller;
 
-import com.ecommerce.common.PageResult;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ecommerce.common.Result;
 import com.ecommerce.dto.AiDescriptionRequest;
 import com.ecommerce.dto.ProductSaveRequest;
 import com.ecommerce.entity.Product;
 import com.ecommerce.service.ProductService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 
 /**
- * 商品管理：查询公开；增删改与 AI 描述需管理员（Service 内校验）。
+ * 商品管理：查询公开；增删改需管理员。
  */
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {
 
-    @Autowired
-    private ProductService productService;
+    private final ProductService productService;
+
+    public ProductController(ProductService productService) {
+        this.productService = productService;
+    }
 
     @GetMapping
-    public Result<PageResult<Product>> list(
+    public Result<Page<Product>> list(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String category,
             @RequestParam(required = false) BigDecimal minPrice,
@@ -40,12 +42,12 @@ public class ProductController {
     }
 
     @PostMapping
-    public Result<Product> create(@Validated @RequestBody ProductSaveRequest request) {
+    public Result<Product> create(@Valid @RequestBody ProductSaveRequest request) {
         return Result.ok(productService.create(request));
     }
 
     @PutMapping("/{id}")
-    public Result<Product> update(@PathVariable Long id, @Validated @RequestBody ProductSaveRequest request) {
+    public Result<Product> update(@PathVariable Long id, @Valid @RequestBody ProductSaveRequest request) {
         request.setId(id);
         return Result.ok(productService.update(request));
     }
@@ -58,7 +60,7 @@ public class ProductController {
     }
 
     @PostMapping("/ai-description")
-    public Result<String> aiDescription(@Validated @RequestBody AiDescriptionRequest request) {
+    public Result<String> aiDescription(@Valid @RequestBody AiDescriptionRequest request) {
         return Result.ok(productService.generateDescription(request));
     }
 }

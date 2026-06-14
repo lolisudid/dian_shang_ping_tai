@@ -1,6 +1,7 @@
-package com.ecommerce.service.impl;
+﻿package com.ecommerce.service.impl;
 
-import com.ecommerce.common.PageResult;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ecommerce.dto.AiDescriptionRequest;
 import com.ecommerce.dto.ProductSaveRequest;
 import com.ecommerce.entity.Product;
@@ -10,33 +11,49 @@ import com.ecommerce.service.ProductService;
 import com.ecommerce.util.AiDescriptionHelper;
 import com.ecommerce.util.UserContext;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-
+/**
+ * 商品服务实现。
+ */
 @Service
 public class ProductServiceImpl implements ProductService {
 
-    @Autowired
-    private ProductMapper productMapper;
-    @Autowired
-    private AiDescriptionHelper aiDescriptionHelper;
+    private final ProductMapper productMapper;
+    private final AiDescriptionHelper aiDescriptionHelper;
+
+    public ProductServiceImpl(ProductMapper productMapper, AiDescriptionHelper aiDescriptionHelper) {
+        this.productMapper = productMapper;
+        this.aiDescriptionHelper = aiDescriptionHelper;
+    }
 
     @Override
-    public PageResult<Product> query(String name, String category, BigDecimal minPrice, BigDecimal maxPrice,
-                                     int page, int size, boolean adminView) {
-        // 仅管理员且显式 adminView 时可查看已下架商品
+    public Page<Product> query(String name, String category, java.math.BigDecimal minPrice,
+                               java.math.BigDecimal maxPrice, int page, int size, boolean adminView) {
         boolean includeDeleted = adminView && UserContext.isAdmin();
-        int offset = (page - 1) * size;
-        long total = productMapper.countQuery(name, category, minPrice, maxPrice, includeDeleted);
-        return new PageResult<>(total, page, size,
-                productMapper.queryPage(name, category, minPrice, maxPrice, includeDeleted, offset, size));
+        LambdaQueryWrapper<Product> wrapper = new LambdaQueryWrapper<>();
+        if (!includeDeleted) {
+            wrapper.eq(Product::getDeleted, 0);
+        }
+        if (name != null && !name.isEmpty()) {
+            wrapper.like(Product::getName, name);
+        }
+        if (category != null && !category.isEmpty()) {
+            wrapper.like(Product::getCategory, category);
+        }
+        if (minPrice != null) {
+            wrapper.ge(Product::getPrice, minPrice);
+        }
+        if (maxPrice != null) {
+            wrapper.le(Product::getPrice, maxPrice);
+        }
+        wrapper.orderByDesc(Product::getId);
+        return productMapper.selectPage(new Page<>(page, size), wrapper);
     }
 
     @Override
     public Product getById(Long id) {
-        Product p = productMapper.findById(id);
+        Product p = productMapper.selectById(id);
         if (p == null || (p.getDeleted() != null && p.getDeleted() == 1)) {
             throw new BusinessException("商品不存在或已下架");
         }
@@ -51,7 +68,7 @@ public class ProductServiceImpl implements ProductService {
             product.setDescription(aiDescriptionHelper.generate(product.getName(), product.getCategory()));
         }
         productMapper.insert(product);
-        return productMapper.findById(product.getId());
+        return productMapper.selectById(product.getId());
     }
 
     @Override
@@ -63,25 +80,22 @@ public class ProductServiceImpl implements ProductService {
         getById(request.getId());
         Product product = toEntity(request);
         product.setId(request.getId());
-        productMapper.update(product);
-        return productMapper.findById(product.getId());
+        productMapper.updateById(product);
+        return productMapper.selectById(product.getId());
     }
 
     @Override
     public void delete(Long id, boolean physical) {
         requireAdmin();
-        Product p = productMapper.findById(id);
+        Product p = productMapper.selectById(id);
         if (p == null) {
             throw new BusinessException("商品不存在");
         }
-        int unfinished = productMapper.countUnfinishedOrdersByProduct(id);
-        if (unfinished > 0) {
-            throw new BusinessException("该商品存在未完成订单，无法删除");
-        }
         if (physical) {
-            productMapper.physicalDelete(id);
+            productMapper.deleteById(id);
         } else {
-            productMapper.logicalDelete(id);
+            p.setDeleted(1);
+            productMapper.updateById(p);
         }
     }
 

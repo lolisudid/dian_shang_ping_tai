@@ -3,11 +3,11 @@ package com.ecommerce.interceptor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
- * 跨域拦截器：开发阶段允许 Vue 前端跨域访问 API。
+ * 跨域拦截器：开发阶段允�?Vue 前端跨域访问 API�?
  */
 @Component
 public class CorsInterceptor implements HandlerInterceptor {
